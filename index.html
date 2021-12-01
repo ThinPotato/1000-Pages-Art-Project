@@ -1,0 +1,54 @@
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/turnjs4/lib/turn.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="aspect">
+            <div class="aspect-inner">
+                <div class="flipbook" id="flipbook">
+                    <div class="hard"><img src="BookCover.jpg" width=450 height=700> </img></div>
+                    <div class="hard"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>var books = []
+        $(document).ready(function () {
+            $.getJSON("books.json", function (data) {
+                $.getJSON("bookTitles.json", function (titles) {
+                    books = data
+                    $("#flipbook").turn({
+                        width: 900,
+                        height: 700,
+                        autoCenter: true,
+                        display: "double",
+                        page: 1
+                    });
+                    for (i = 1; i < Object.keys(books).length; i++) {
+                        var element = "<p style = \"font-size:12px; padding:16px\">"
+                        for (sentence in books[i]) {
+                            element = element + books[i][sentence] + "<br> <br>"
+                        }
+                        element += "</p>"
+                        if (i == 1)
+                            $("#flipbook").turn("addPage", `<div> </div>`)
+                        else if (i % 2 == 0)
+                            $("#flipbook").turn("addPage", `<div></div>`)
+                        else
+                            $("#flipbook").turn("addPage", `<div><center style= \"padding:8px\">${titles[i]}</center>${element}</div>`, i)
+                    }
+                })
+            }).fail(function () {
+                console.log("An error has occurred.");
+
+            });
+        });
+    </script>
+    <script type="text/javascript">
+
+
+    </script>
+</body>
